@@ -3,8 +3,8 @@ import time
 import random
 
 #bludiste
-SIRKA = 500
-VYSKA = 500
+SIRKA = 1000
+VYSKA = 1000
 
 BILA = (255, 255, 255)
 MODRA = (0, 0, 255)
@@ -22,9 +22,9 @@ screen = pygame.display.set_mode((SIRKA, VYSKA), pygame.FULLSCREEN)
 pygame.display.set_caption("Bludiste")
 pygame.mixer.music.load("C:/Users/stank/Downloads/sound.mp3")
 pygame.mixer.music.play()
-font = pygame.font.Font(pygame.font.get_default_font(), 12)
+font = pygame.font.Font(pygame.font.get_default_font(), 20)
 text_surface = font.render("start", True, BILA)
-screen.blit(text_surface, (5,5))
+screen.blit(text_surface, (5,10))
 text_surface = font.render("finish", True, BILA)
-screen.blit(text_surface, (400, 430))
+screen.blit(text_surface, (900, 940))
 clock = pygame.time.Clock()
