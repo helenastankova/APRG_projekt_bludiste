@@ -44,8 +44,8 @@ def bunka(x, y, z, screen):
     pygame.draw.rect(screen, CERVENA, (x + 1, y + 1, z - 2, z - 2), 0)
     pygame.display.update()
 
-def bunka_2(x, y,z, screen):
-    pygame.draw.rect(screen, MODRA, (x + 1, y + 1, z - 2, z - 2), 0)
+def bunka_2(x, y,z, screen, barva):
+    pygame.draw.rect(screen, barva, (x + 1, y + 1, z - 2, z - 2), 0)
     pygame.display.update()
 
 def vysledna_bunka_doprava(x, y, screen):
@@ -75,24 +75,24 @@ def vysledna_bunka_nahoru(x, y, screen):
     screen.blit(image, (x + 5, y + 3))
     pygame.display.update()
 
-def nahoru(x, y, z, screen):
-    pygame.draw.rect(screen, MODRA, (x + 1, y - z + 1, z - 1, (2 * z) - 1), 0)
+def nahoru(x, y, z, screen, barva):
+    pygame.draw.rect(screen, barva, (x + 1, y - z + 1, z - 1, (2 * z) - 1), 0)
     pygame.display.update()
 
-def dolu(x, y,z, screen):
-    pygame.draw.rect(screen, MODRA, (x + 1, y + 1, z - 1, (2 * z) - 1), 0)
+def dolu(x, y,z, screen, barva):
+    pygame.draw.rect(screen, barva, (x + 1, y + 1, z - 1, (2 * z) - 1), 0)
     pygame.display.update()
 
-def doleva(x, y, z, screen):
-    pygame.draw.rect(screen, MODRA, (x - z + 1, y + 1, (2 * z) - 1, z - 1), 0)
+def doleva(x, y, z, screen, barva):
+    pygame.draw.rect(screen, barva, (x - z + 1, y + 1, (2 * z) - 1, z - 1), 0)
     pygame.display.update()
 
-def doprava(x, y,z,  screen):
-    pygame.draw.rect(screen, MODRA, (x + 1, y + 1, (2 * z) - 1, z - 1), 0)
+def doprava(x, y,z,  screen, barva):
+    pygame.draw.rect(screen, barva, (x + 1, y + 1, (2 * z) - 1, z - 1), 0)
     pygame.display.update()
 
 
-def bludiste(x, y, z, screen):
+def bludiste(x, y, z, screen, barva):
     bunka(x, y,z, screen)
     navstivena.append((x, y))
     zasobnik.append((x, y))
@@ -113,28 +113,28 @@ def bludiste(x, y, z, screen):
             vybrana_bunka = (random.choice(nova_bunka))
 
             if vybrana_bunka == "doprava":
-                doprava(x, y,z, screen)
+                doprava(x, y,z, screen, barva)
                 reseni[(x + z, y)] = x, y
                 x = x + z
                 navstivena.append((x, y))
                 zasobnik.append((x, y))
 
             elif vybrana_bunka == "doleva":
-                doleva(x, y,z, screen)
+                doleva(x, y,z, screen, barva)
                 reseni[(x - z, y)] = x, y
                 x = x - z
                 navstivena.append((x, y))
                 zasobnik.append((x, y))
 
             elif vybrana_bunka == "nahoru":
-                nahoru(x, y,z, screen)
+                nahoru(x, y,z, screen, barva)
                 reseni[(x, y - z)] = x, y
                 y = y - z
                 navstivena.append((x, y))
                 zasobnik.append((x, y))
 
             elif vybrana_bunka == "dolu":
-                dolu(x, y,z, screen)
+                dolu(x, y,z, screen, barva)
                 reseni[(x, y + z)] = x, y
                 y = y + z
                 navstivena.append((x, y))
@@ -143,7 +143,7 @@ def bludiste(x, y, z, screen):
             x, y = zasobnik.pop()
             bunka(x, y,z, screen)
             time.sleep(.05)
-            bunka_2(x, y,z, screen)
+            bunka_2(x, y,z, screen, barva)
 
 def cesta_zpet(x, y, z, screen):
     vysledna_bunka_doleva(x, y, screen)
@@ -169,6 +169,20 @@ def main():
     z = 20
     x, y = startX, startY
 
+    # uzivatel si vybira barvu bludiste
+    print("MODRA = 1, ZELENA = 2, ORANZOVA = 3, ZLUTA = 4, FIALOVA = 5")
+    cislo = int(input("Zadej cislo barvy bludiste:"))
+    if cislo == 1:
+        barva = MODRA
+    if cislo == 2:
+        barva = ZELENA
+    if cislo == 3:
+        barva = ORANZOVA
+    if cislo == 4:
+        barva = ZLUTA
+    if cislo == 5:
+        barva = FIALOVA
+
     #libovolne zadani velikosti bludiste uzivatelem
     pocet_bunek_v_radku = int(input("Zadej pocet bunek v radku:"))
     pocet_bunek_v_sloupci = int(input("Zadej pocet bunek v sloupci:"))
@@ -191,7 +205,7 @@ def main():
     #screen.blit(text_surface, (5, 5))
     clock = pygame.time.Clock()
     sit_pro_bludiste(startX, startY, z, screen,pocet_bunek_v_radku,pocet_bunek_v_sloupci)
-    bludiste(x, y,z, screen)
+    bludiste(x, y,z, screen, barva)
     cesta_zpet(pocet_bunek_v_radku * z, pocet_bunek_v_sloupci * z, z, screen)
 
     running = True
