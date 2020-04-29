@@ -201,7 +201,6 @@ def main():
     screen.blit(image, ((pocet_bunek_v_radku * 20 + 20), (pocet_bunek_v_sloupci * 20)))
     image2 = pygame.image.load("buda1.png")
     screen.blit(image2, (20, 0))
-    screen.blit(image2, (-3, -7))
     clock = pygame.time.Clock()
     sit_pro_bludiste(startX, startY, z, screen,pocet_bunek_v_radku,pocet_bunek_v_sloupci)
     bludiste(x, y,z, screen, barva)
