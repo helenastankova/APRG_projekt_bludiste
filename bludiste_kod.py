@@ -192,8 +192,8 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((SIRKA, VYSKA), pygame.FULLSCREEN)
     pygame.display.set_caption("Bludiste")
-    pygame.mixer.music.load("C:/Users/stank/Downloads/sound.mp3")
-    pygame.mixer.music.play()
+    pygame.mixer.music.load("znelka.mp3")
+    pygame.mixer.music.play(2)
     font = pygame.font.Font(pygame.font.get_default_font(), 15)
     #text_surface = font.render("FINISH", True, BILA)
     #screen.blit(text_surface, (5, 5))
@@ -209,8 +209,8 @@ def main():
 
     running = True
     while running:
-        pygame.mixer.music.stop()
         for event in pygame.event.get():
+            pygame.mixer.music.stop()
             if event.type == pygame.QUIT:
                 running = False
 
