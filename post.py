@@ -16,15 +16,193 @@ LIMETKOVA = (180, 255, 100)
 RUZOVA = (255, 100, 180)
 FIALOVA = (240, 0, 255)
 
-#pygame
-pygame.init()
-screen = pygame.display.set_mode((SIRKA, VYSKA), pygame.FULLSCREEN)
-pygame.display.set_caption("Bludiste")
-pygame.mixer.music.load("C:/Users/stank/Downloads/sound.mp3")
-pygame.mixer.music.play()
-font = pygame.font.Font(pygame.font.get_default_font(), 20)
-text_surface = font.render("START", True, BILA)
-screen.blit(text_surface, (5,10))
-text_surface = font.render("FINISh", True, BILA)
-screen.blit(text_surface, (900, 940))
-clock = pygame.time.Clock()
+#pocatecni souradnice
+startX = 20
+startY = 20
+
+x = startX
+y = startY
+
+sit = []
+navstivena = []
+zasobnik = []
+reseni = {}
+
+def sit_pro_bludiste(x, y, z, screen,pocet_bunek_v_radku, pocet_bunek_v_sloupci):
+    for a in range(1, pocet_bunek_v_sloupci+ 1):
+        x = startX
+        for b in range(1, pocet_bunek_v_radku + 1):
+            pygame.draw.line(screen, BILA, [x, y], [x + z, y], 2)
+            pygame.draw.line(screen, BILA, [x + z, y], [x + z, y + z], 2)
+            pygame.draw.line(screen, BILA, [x + z, y + z], [x, y + z], 2)
+            pygame.draw.line(screen, BILA, [x, y + z], [x, y], 2)
+            sit.append((x, y))
+            x = x + z
+        y = y + z
+
+def bunka(x, y, z, screen):
+    pygame.draw.rect(screen, CERVENA, (x + 1, y + 1, z - 2, z - 2), 0)
+    pygame.display.update()
+
+def bunka_2(x, y,z, screen):
+    pygame.draw.rect(screen, MODRA, (x + 1, y + 1, z - 2, z - 2), 0)
+    pygame.display.update()
+
+def vysledna_bunka_doprava(x, y, screen):
+    image = pygame.image.load("pacicka.png")
+    image = pygame.transform.scale(image, (12, 12))
+    image = pygame.transform.rotate(image, -90)
+    screen.blit(image, (x, y + 5))
+    pygame.display.update()
+
+def vysledna_bunka_dolu(x, y, screen):
+    image = pygame.image.load("pacicka.png")
+    image = pygame.transform.scale(image, (12, 12))
+    image = pygame.transform.rotate(image, 180)
+    screen.blit(image, (x + 5, y))
+    pygame.display.update()
+
+def vysledna_bunka_doleva(x, y, screen):
+    image = pygame.image.load("pacicka.png")
+    image = pygame.transform.scale(image, (12, 12))
+    image = pygame.transform.rotate(image, 90)
+    screen.blit(image, (x + 3, y + 5))
+    pygame.display.update()
+
+def vysledna_bunka_nahoru(x, y, screen):
+    image = pygame.image.load("pacicka.png")
+    image = pygame.transform.scale(image, (12, 12))
+    screen.blit(image, (x + 5, y + 3))
+    pygame.display.update()
+
+def nahoru(x, y, z, screen):
+    pygame.draw.rect(screen, MODRA, (x + 1, y - z + 1, z - 1, (2 * z) - 1), 0)
+    pygame.display.update()
+
+def dolu(x, y,z, screen):
+    pygame.draw.rect(screen, MODRA, (x + 1, y + 1, z - 1, (2 * z) - 1), 0)
+    pygame.display.update()
+
+def doleva(x, y, z, screen):
+    pygame.draw.rect(screen, MODRA, (x - z + 1, y + 1, (2 * z) - 1, z - 1), 0)
+    pygame.display.update()
+
+def doprava(x, y,z,  screen):
+    pygame.draw.rect(screen, MODRA, (x + 1, y + 1, (2 * z) - 1, z - 1), 0)
+    pygame.display.update()
+
+
+def bludiste(x, y, z, screen):
+    bunka(x, y,z, screen)
+    navstivena.append((x, y))
+    zasobnik.append((x, y))
+    while len(zasobnik) > 0:
+        time.sleep(.0001)
+        nova_bunka = []
+
+        if (x, y - z) not in navstivena and (x, y - z) in sit:
+            nova_bunka.append("nahoru")
+        if (x, y + z) not in navstivena and (x, y + z) in sit:
+            nova_bunka.append("dolu")
+        if (x - z, y) not in navstivena and (x - z, y) in sit:
+            nova_bunka.append("doleva")
+        if (x + z, y) not in navstivena and (x + z, y) in sit:
+            nova_bunka.append("doprava")
+
+        if len(nova_bunka) > 0:
+            vybrana_bunka = (random.choice(nova_bunka))
+
+            if vybrana_bunka == "doprava":
+                doprava(x, y,z, screen)
+                reseni[(x + z, y)] = x, y
+                x = x + z
+                navstivena.append((x, y))
+                zasobnik.append((x, y))
+
+            elif vybrana_bunka == "doleva":
+                doleva(x, y,z, screen)
+                reseni[(x - z, y)] = x, y
+                x = x - z
+                navstivena.append((x, y))
+                zasobnik.append((x, y))
+
+            elif vybrana_bunka == "nahoru":
+                nahoru(x, y,z, screen)
+                reseni[(x, y - z)] = x, y
+                y = y - z
+                navstivena.append((x, y))
+                zasobnik.append((x, y))
+
+            elif vybrana_bunka == "dolu":
+                dolu(x, y,z, screen)
+                reseni[(x, y + z)] = x, y
+                y = y + z
+                navstivena.append((x, y))
+                zasobnik.append((x, y))
+        else:
+            x, y = zasobnik.pop()
+            bunka(x, y,z, screen)
+            time.sleep(.05)
+            bunka_2(x, y,z, screen)
+
+def cesta_zpet(x, y, z, screen):
+    vysledna_bunka_doleva(x, y, screen)
+    y1 = float("inf")
+    x1 = 0
+    while (x, y) != (startX, startY):
+        x, y = reseni[x, y]
+        if y1 == y:
+            if x1 < x:
+                vysledna_bunka_doprava(x, y, screen)
+            else:
+                vysledna_bunka_doleva(x, y, screen)
+        else:
+            if y1 < y:
+                vysledna_bunka_dolu(x, y, screen)
+            else:
+                vysledna_bunka_nahoru(x, y, screen)
+        time.sleep(.1)
+        y1 = y
+        x1 = x
+
+def main():
+    z = 20
+    x, y = startX, startY
+
+    #libovolne zadani velikosti bludiste uzivatelem
+    pocet_bunek_v_radku = int(input("Zadej pocet bunek v radku:"))
+    pocet_bunek_v_sloupci = int(input("Zadej pocet bunek v sloupci:"))
+    if (pocet_bunek_v_radku or pocet_bunek_v_sloupci) > 48:
+        input("Pozadovanane rozmery jsou moc velké!")
+    #inicializace pygamu
+    pygame.init()
+    screen = pygame.display.set_mode((SIRKA, VYSKA), pygame.FULLSCREEN)
+    pygame.display.set_caption("Bludiste")
+    pygame.mixer.music.load("C:/Users/stank/Downloads/sound.mp3")
+    pygame.mixer.music.play()
+    font = pygame.font.Font(pygame.font.get_default_font(), 15)
+    #text_surface = font.render("START", True, BILA)
+    #screen.blit(text_surface, (5, 5))
+    #image = pygame.image.load("start.png")
+    #screen.blit(image, (930, 900))
+    #image2 = pygame.image.load("cil.png")
+    #screen.blit(image2, (-8, 5))
+    #text_surface = font.render("Jupí, došel jsi do cíle", True, BILA)
+    #screen.blit(text_surface, (5, 5))
+    clock = pygame.time.Clock()
+    sit_pro_bludiste(startX, startY, z, screen,pocet_bunek_v_radku,pocet_bunek_v_sloupci)
+    bludiste(x, y,z, screen)
+    cesta_zpet(pocet_bunek_v_radku * z, pocet_bunek_v_sloupci * z, z, screen)
+
+    running = True
+    while running:
+        pygame.mixer.music.stop()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+if __name__ =="__main__":
+    main()
+
+
+
