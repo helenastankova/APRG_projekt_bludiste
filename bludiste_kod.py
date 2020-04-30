@@ -28,6 +28,8 @@ navstivena = []
 zasobnik = []
 reseni = {}
 
+
+#vytvari sit pro bludiste
 def sit_pro_bludiste(x, y, z, screen,pocet_bunek_v_radku, pocet_bunek_v_sloupci):
     for a in range(1, pocet_bunek_v_sloupci+ 1):
         x = startX
@@ -40,6 +42,7 @@ def sit_pro_bludiste(x, y, z, screen,pocet_bunek_v_radku, pocet_bunek_v_sloupci)
             x = x + z
         y = y + z
 
+#definice potrebnych bunek
 def bunka(x, y, z, screen):
     pygame.draw.rect(screen, CERVENA, (x + 1, y + 1, z - 2, z - 2), 0)
     pygame.display.update()
@@ -75,6 +78,7 @@ def vysledna_bunka_nahoru(x, y, screen):
     screen.blit(image, (x + 5, y + 3))
     pygame.display.update()
 
+#definice simulace smazani steny mezi dvema bunkami
 def nahoru(x, y, z, screen, barva):
     pygame.draw.rect(screen, barva, (x + 1, y - z + 1, z - 1, (2 * z) - 1), 0)
     pygame.display.update()
@@ -91,7 +95,7 @@ def doprava(x, y,z,  screen, barva):
     pygame.draw.rect(screen, barva, (x + 1, y + 1, (2 * z) - 1, z - 1), 0)
     pygame.display.update()
 
-
+#vykreslovani bludiste, tvoreni chodeb
 def bludiste(x, y, z, screen, barva):
     bunka(x, y,z, screen)
     navstivena.append((x, y))
@@ -145,6 +149,7 @@ def bludiste(x, y, z, screen, barva):
             time.sleep(.05)
             bunka_2(x, y,z, screen, barva)
 
+#modeluje cestu zpet a nataci pacicku do spravneho smeru
 def cesta_zpet(x, y, z, screen):
     vysledna_bunka_doleva(x, y, screen)
     y1 = float("inf")
@@ -166,6 +171,9 @@ def cesta_zpet(x, y, z, screen):
         x1 = x
 
 def main():
+    # inicializace pygamu
+    pygame.init()
+
     z = 20
     x, y = startX, startY
 
@@ -183,17 +191,18 @@ def main():
     if cislo == 5:
         barva = FIALOVA
 
-    #libovolne zadani velikosti bludiste uzivatelem
+    # libovolne zadani velikosti bludiste uzivatelem
     pocet_bunek_v_radku = int(input("Zadej pocet bunek v radku:"))
     pocet_bunek_v_sloupci = int(input("Zadej pocet bunek v sloupci:"))
     if (pocet_bunek_v_radku or pocet_bunek_v_sloupci) > 48:
         input("Pozadovanane rozmery jsou moc velké!")
-    #inicializace pygamu
-    pygame.init()
+
     screen = pygame.display.set_mode((SIRKA, VYSKA), pygame.FULLSCREEN)
     pygame.display.set_caption("Bludiste")
     pygame.mixer.music.load("znelka.mp3")
+    pygame.mixer.music.set_volume(1)
     pygame.mixer.music.play(2)
+
     font = pygame.font.Font(pygame.font.get_default_font(), 15)
     #text_surface = font.render("FINISH", True, BILA)
     #screen.blit(text_surface, (5, 5))
@@ -209,8 +218,8 @@ def main():
 
     running = True
     while running:
+        pygame.mixer.music.stop()
         for event in pygame.event.get():
-            pygame.mixer.music.stop()
             if event.type == pygame.QUIT:
                 running = False
 
