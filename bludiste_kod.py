@@ -204,12 +204,20 @@ def main():
     pygame.mixer.music.play(2)
 
     font = pygame.font.Font(pygame.font.get_default_font(), 15)
+
+
+    text_surface = font.render("START", True, BILA)
+    screen.blit(text_surface, (x + (pocet_bunek_v_radku * z) - 45, y + (pocet_bunek_v_sloupci * z) + 5))
     text_surface = font.render("FINISH", True, BILA)
-    screen.blit(text_surface, (40, 5))
+    screen.blit(text_surface, (45, 5))
+
+
+
     image = pygame.image.load("dog1.png")
     screen.blit(image, ((pocet_bunek_v_radku * 20 + 20), (pocet_bunek_v_sloupci * 20)))
     image2 = pygame.image.load("buda1.png")
     screen.blit(image2, (20, 0))
+
     clock = pygame.time.Clock()
     sit_pro_bludiste(startX, startY, z, screen,pocet_bunek_v_radku,pocet_bunek_v_sloupci)
     bludiste(x, y,z, screen, barva)
