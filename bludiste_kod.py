@@ -205,7 +205,7 @@ def main():
 
     font = pygame.font.Font(pygame.font.get_default_font(), 15)
     text_surface = font.render("FINISH", True, BILA)
-    screen.blit(text_surface, (50, 0))
+    screen.blit(text_surface, (40, 5))
     image = pygame.image.load("dog1.png")
     screen.blit(image, ((pocet_bunek_v_radku * 20 + 20), (pocet_bunek_v_sloupci * 20)))
     image2 = pygame.image.load("buda1.png")
